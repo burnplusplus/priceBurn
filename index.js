@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
-const port = 3001;
+const port = 8080;
 const Moralis = require("moralis").default;
 const cors = require("cors");
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
+
 require("dotenv").config({ path: ".env" });
 
 app.use(cors());
@@ -57,20 +58,27 @@ app.get("/address", async (req, res) => {
 });
 
 
+
 Moralis.start({
   apiKey: MORALIS_API_KEY,
 }).then(async () => {
-  const chain = EvmChain.BSC
+  const chain = EvmChain.BSC;
+  const address = "0x4951B6Cac448EE3732921DEbF5018C2AA074264a";
+  const functionName = "stakingTokenBalance";
+
+  stakingBalance = await Moralis.EvmApi.utils.runContractFunction({
+    address,
+    functionName,
+    abi,
+    chain,
+  });
+
+  console.log(`Staking balance: ${stakingBalance.result}`);
   
   app.listen(port, "0.0.0.0", () => {
     console.log(`Listening for API Calls`);
   });
 });
-
-
-
-
-
 
 
 
